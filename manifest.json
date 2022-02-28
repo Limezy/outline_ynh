@@ -6,7 +6,7 @@
         "en": "An open, extensible, wiki for your team built using React and Node.js.",
         "fr": "Un wiki open source et évolutif pour votre équipe, conçu avec React et Node.js"
     },
-    "version": "0.61.1~ynh1",
+    "version": "0.61.1~ynh2",
     "url": "www.getoutline.com",
     "upstream": {
         "license": "BSL 1.1",
