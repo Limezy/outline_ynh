@@ -1,8 +1,23 @@
 diff --git a/app/scenes/Login/Provider.tsx b/app/scenes/Login/Provider.tsx
-index ee350008..f82c26d6 100644
+index ee350008..a3179940 100644
 --- a/app/scenes/Login/Provider.tsx
 +++ b/app/scenes/Login/Provider.tsx
-@@ -98,7 +98,7 @@ class Provider extends React.Component<Props, State> {
+@@ -84,7 +84,7 @@ class Provider extends React.Component<Props, State> {
+                 <InputLarge
+                   type="email"
+                   name="email"
+-                  placeholder="me@domain.com"
++                  placeholder="email@domaine.fr"
+                   value={this.state.email}
+                   onChange={this.handleChangeEmail}
+                   disabled={this.state.isSubmitting}
+@@ -93,12 +93,12 @@ class Provider extends React.Component<Props, State> {
+                   short
+                 />
+                 <ButtonLarge type="submit" disabled={this.state.isSubmitting}>
+-                  {t("Sign In")} →
++                  {t("S'identifier")} →
+                 </ButtonLarge>
                </>
              ) : (
                <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
