@@ -36,7 +36,7 @@ index ee350008..a3179940 100644
            })}
          </ButtonLarge>
 diff --git a/app/scenes/Login/index.tsx b/app/scenes/Login/index.tsx
-index bb7c54e6..1d64036b 100644
+index bb7c54e6..dfbdca13 100644
 --- a/app/scenes/Login/index.tsx
 +++ b/app/scenes/Login/index.tsx
 @@ -154,7 +154,7 @@ function Login() {
@@ -48,3 +48,12 @@ index bb7c54e6..1d64036b 100644
                authProviderName: config.name || "Outline",
              })}
            </Heading>
+@@ -170,7 +170,7 @@ function Login() {
+             {hasMultipleProviders && (
+               <>
+                 <Note>
+-                  {t("You signed in with {{ authProviderName }} last time.", {
++                  {t("Vous vous êtes authentifié comme {{ authProviderName }} la dernière fois.", {
+                     authProviderName: defaultProvider.name,
+                   })}
+                 </Note>
