@@ -1,0 +1,35 @@
+diff --git a/app/scenes/Login/Provider.tsx b/app/scenes/Login/Provider.tsx
+index ee350008..f82c26d6 100644
+--- a/app/scenes/Login/Provider.tsx
++++ b/app/scenes/Login/Provider.tsx
+@@ -98,7 +98,7 @@ class Provider extends React.Component<Props, State> {
+               </>
+             ) : (
+               <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
+-                {t("Continue with Email")}
++                {t("Accès membre")}
+               </ButtonLarge>
+             )}
+           </Form>
+@@ -113,7 +113,7 @@ class Provider extends React.Component<Props, State> {
+           icon={<AuthLogo providerName={id} />}
+           fullwidth
+         >
+-          {t("Continue with {{ authProviderName }}", {
++          {t("Accès {{ authProviderName }}", {
+             authProviderName: name,
+           })}
+         </ButtonLarge>
+diff --git a/app/scenes/Login/index.tsx b/app/scenes/Login/index.tsx
+index bb7c54e6..1d64036b 100644
+--- a/app/scenes/Login/index.tsx
++++ b/app/scenes/Login/index.tsx
+@@ -154,7 +154,7 @@ function Login() {
+           </>
+         ) : (
+           <Heading centered>
+-            {t("Login to {{ authProviderName }}", {
++            {t("Bienvenue sur {{ authProviderName }}", {
+               authProviderName: config.name || "Outline",
+             })}
+           </Heading>

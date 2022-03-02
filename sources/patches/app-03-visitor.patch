@@ -30,7 +30,7 @@ index e69de29b..22beba6e 100644
 +const allowedDomains = getAllowedDomains();
 +
 +export const config = {
-+  name: "Visitor",
++  name: "visiteur",
 +  enabled: true,
 +};
 +
@@ -42,7 +42,7 @@ index e69de29b..22beba6e 100644
 +          const domain = "domain.tld";
 +          const subdomain = domain.split(".")[0];
 +          const teamName = capitalize(subdomain);
-+          const name = "Visitor";
++          const name = "Visiteur";
 +          const email = "visitor@domain.tld";
 +          const result = await accountProvisioner({
 +            ip: req.ip,
