@@ -6,7 +6,7 @@
         "en": "An open, extensible, wiki for your team built using React and Node.js.",
         "fr": "Un wiki open source et évolutif pour votre équipe, conçu avec React et Node.js"
     },
-    "version": "0.61.1~ynh2",
+    "version": "0.62.0~ynh1",
     "url": "www.getoutline.com",
     "upstream": {
         "license": "BSL 1.1",
@@ -31,7 +31,9 @@
         "install" : [
             {
                 "name": "domain",
-                "type": "domain"
+                "type": "domain",
+                "example": "wiki.domain.tld",
+                "ask": "Domain for Outline app. This will be the main domain to access the wiki. Outline has to be installed at the root"
             },
             {
                 "name": "is_public",
@@ -49,19 +51,22 @@
                 "default": "en"
             },
             {
-                "name": "slack_key",
-                "type": "string",
-                "ask": "Slack Client ID (from https://api.slack.com/apps)"
+                "name": "dex_domain",
+                "type": "domain",
+                "example": "auth.domain.tld",
+                "ask": "Domain for authentification. It can't be the same domain as above. Dex app will be installed and used for the authentification mechanism"
             },
             {
-                "name": "slack_secret",
-                "type": "string",
-                "ask": "Slack Client Secret (from https://api.slack.com/apps)"
+                "name": "dex_path",
+                "type": "path",
+                "example": "/example",
+                "default": "/example"
             },
             {
                 "name": "minio_domain",
                 "type": "domain",
-                "ask": "Domain for MinIO app (if not yet installed, it will automatically be). Please note that this domain has to be free from any app"
+                "example": "docs.domain.tld",
+                "ask": "Domain for Minio app, used for images and attachements storage. If not yet installed, it will automatically be. Minio has to be installed at the root"
             }
         ]
     }

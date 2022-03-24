@@ -22,13 +22,16 @@ path_url=$(ynh_app_setting_get --app=$app --key=path_url)
 port=$(ynh_app_setting_get --app=$app --key=port)
 db_name=$(ynh_app_setting_get --app=$app --key=db_name)
 language_key=$(ynh_app_setting_get --app=$app --key=language_key)
-slack_key=$(ynh_app_setting_get --app=$app --key=slack_key)
-slack_secret=$(ynh_app_setting_get --app=$app --key=slack_secret)
 secret_key=$(ynh_app_setting_get --app=$app --key=secret_key)
 utils_secret=$(ynh_app_setting_get --app=$app --key=utils_secret)
 minio_domain=$(ynh_app_setting_get --app="minio" --key=domain)
 minio_key=$(ynh_app_setting_get --app="minio" --key=minio_key)
 mc_path=$(ynh_app_setting_get --app="minio" --key=mc_path)
+dex_domain=$(ynh_app_setting_get --app="minio" --key=dex_domain)
+dex_path=$(ynh_app_setting_get --app="minio" --key=dex_path)
+oidc_secret=$(ynh_app_setting_get --app="minio" --key=oidc_secret)
+oidc_name=$(ynh_app_setting_get --app="minio" --key=oidc_name)
+oidc_callback=$(ynh_app_setting_get --app="minio" --key=oidc_callback)
 
 #=================================================
 # CHECK VERSION

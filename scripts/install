@@ -41,9 +41,6 @@ fi
 secret_key=$(ynh_hex_32_random)
 utils_secret=$(ynh_hex_32_random)
 
-slack_key=$YNH_APP_ARG_SLACK_KEY
-slack_secret=$YNH_APP_ARG_SLACK_SECRET
-
 app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
@@ -63,6 +60,23 @@ fi
 minio_domain=$(ynh_app_setting_get --app="minio" --key=domain)
 minio_key=$(ynh_app_setting_get --app="minio" --key=minio_key)
 mc_path=$(ynh_app_setting_get --app="minio" --key=mc_path)
+
+#=================================================
+# CHECK IF MINIO IS INSTALLED, IF NOT INSTALL IT
+#=================================================
+ynh_script_progression --message="Installing Dex..." --weight=18
+
+dex_domain=$YNH_APP_ARG_DEX_DOMAIN
+dex_path=$YNH_APP_ARG_DEX_PATH
+oidc_secret=$(ynh_hex_32_random)
+oidc_name="Outline"
+oidc_callback="$domain/auth/oidc.callback"
+
+if yunohost app list | grep -q "$YNH_APP_ARG_DEX_DOMAIN"; then
+	ynh_die "The domain provided for Dex is already used by another app. Please chose another one !"
+fi
+
+yunohost app install https://github.com/YunoHost-Apps/dex_ynh --force --args "domain=$dex_domain&path=$dex_path&OIDC_name=$oidc_name&OIDC_secret=$oidc_secret&OIDC_callback=$oidc_callback"
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
@@ -85,10 +99,12 @@ ynh_app_setting_set --app=$app --key=path --value=$path_url
 ynh_app_setting_set --app=$app --key=language --value=$language
 ynh_app_setting_set --app=$app --key=secret_key --value=$secret_key
 ynh_app_setting_set --app=$app --key=utils_secret --value=$utils_secret
-ynh_app_setting_set --app=$app --key=slack_key --value=$slack_key
-ynh_app_setting_set --app=$app --key=slack_secret --value=$slack_secret
 ynh_app_setting_set --app=$app --key=language_key --value=$language_key
-
+ynh_app_setting_set --app=$app --key=dex_domain --value=$dex_domain
+ynh_app_setting_set --app=$app --key=dex_path --value=$dex_path
+ynh_app_setting_set --app=$app --key=oidc_name --value=$oidc_name
+ynh_app_setting_set --app=$app --key=oidc_secret --value=$oidc_secret
+ynh_app_setting_set --app=$app --key=oidc_callback --value=$oidc_callback
 
 #=================================================
 # STANDARD MODIFICATIONS
