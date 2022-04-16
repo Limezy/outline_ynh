@@ -11,8 +11,9 @@ index f74d3223..319a1624 100644
      "pg": "^8.5.1",
      "pg-hstore": "^2.3.4",
 diff --git a/server/routes/auth/providers/req.ts b/server/routes/auth/providers/req.ts
-index e69de29b..22beba6e 100644
---- a/server/routes/auth/providers/req.ts
+new file mode 100644
+index 00000000..b4fd30c3
+--- /dev/null
 +++ b/server/routes/auth/providers/req.ts
 @@ -0,0 +1,64 @@
 +import passport from "@outlinewiki/koa-passport";
@@ -30,7 +31,7 @@ index e69de29b..22beba6e 100644
 +const allowedDomains = getAllowedDomains();
 +
 +export const config = {
-+  name: "visiteur",
++  name: "Visiteur",
 +  enabled: true,
 +};
 +
