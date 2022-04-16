@@ -1,0 +1,100 @@
+diff --git a/package.json b/package.json
+index f74d3223..319a1624 100644
+--- a/package.json
++++ b/package.json
+@@ -129,6 +129,7 @@
+     "passport": "^0.4.1",
+     "passport-google-oauth2": "^0.2.0",
+     "passport-oauth2": "^1.6.1",
++    "passport-req": "^0.1.1",
+     "passport-slack-oauth2": "^1.1.0",
+     "pg": "^8.5.1",
+     "pg-hstore": "^2.3.4",
+diff --git a/server/routes/auth/providers/req.ts b/server/routes/auth/providers/req.ts
+index e69de29b..22beba6e 100644
+--- a/server/routes/auth/providers/req.ts
++++ b/server/routes/auth/providers/req.ts
+@@ -0,0 +1,64 @@
++import passport from "@outlinewiki/koa-passport";
++import Router from "koa-router";
++import { capitalize } from "lodash";
++import { Strategy as ReqStrategy } from "passport-req";
++import accountProvisioner from "@server/commands/accountProvisioner";
++import env from "@server/env";
++import passportMiddleware from "@server/middlewares/passport";
++import { getAllowedDomains } from "@server/utils/authentication";
++import { StateStore } from "@server/utils/passport";
++
++const router = new Router();
++const providerName = "req";
++const allowedDomains = getAllowedDomains();
++
++export const config = {
++  name: "visiteur",
++  enabled: true,
++};
++
++if (true) {
++  passport.use(
++    new ReqStrategy(
++      async function (req,done) {
++        try {
++          const domain = "domain.tld";
++          const subdomain = domain.split(".")[0];
++          const teamName = capitalize(subdomain);
++          const name = "Visiteur";
++          const email = "visitor@domain.tld";
++          const result = await accountProvisioner({
++            ip: req.ip,
++            team: {
++              name: teamName,
++              domain,
++              subdomain,
++            },
++            user: {
++              name: name,
++              email: email,
++              avatarUrl: null,
++            },
++            authenticationProvider: {
++              name: providerName,
++              providerId: domain,
++            },
++            authentication: {
++              providerId: "1234",
++              accessToken: null,
++              refreshToken: null,
++              scopes: [],
++            },
++          });
++          return done(null, result.user, result);
++        } catch (err) {
++          return done(err, null);
++        }
++      }
++    )
++  );
++
++  router.get("req", passportMiddleware(providerName));
++}
++
++export default router;
+diff --git a/yarn.lock b/yarn.lock
+index 7c238b98..c78ae219 100644
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -11421,6 +11421,14 @@ passport-oauth@1.0.x:
+     passport-oauth1 "1.x.x"
+     passport-oauth2 "1.x.x"
+ 
++passport-req@^0.1.1:
++  version "0.1.1"
++  resolved "https://registry.yarnpkg.com/passport-req/-/passport-req-0.1.1.tgz#451bff1500b3d464a768d42f0762328a21236a18"
++  integrity sha1-RRv/FQCz1GSnaNQvB2IyiiEjahg=
++  dependencies:
++    passport "~0.1.1"
++    pkginfo "0.2.x"
++
+ passport-slack-oauth2@^1.1.0:
+   version "1.1.0"
+   resolved "https://registry.yarnpkg.com/passport-slack-oauth2/-/passport-slack-oauth2-1.1.0.tgz#4a153b3d0d5a9e1a5041b61599d2b41a4b9486f1"
