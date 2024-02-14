@@ -1,0 +1,151 @@
+diff --git a/app/editor/menus/block.tsx b/app/editor/menus/block.tsx
+index 301c2610d..1e6917bd8 100644
+--- a/app/editor/menus/block.tsx
++++ b/app/editor/menus/block.tsx
+@@ -20,6 +20,7 @@ import {
+   MathIcon,
+   DoneIcon,
+   EmbedIcon,
++  BookmarkedIcon,
+ } from "outline-icons";
+ import * as React from "react";
+ import styled from "styled-components";
+@@ -195,6 +196,13 @@ export default function blockMenuItems(dictionary: Dictionary): MenuItem[] {
+       keywords: "notice card suggestion",
+       attrs: { style: "tip" },
+     },
++    {
++      name: "container_notice",
++      title: dictionary.bibleNotice,
++      icon: <BookmarkedIcon />,
++      keywords: "notice card bible",
++      attrs: { style: "bible" },
++    },
+     {
+       name: "separator",
+     },
+diff --git a/app/hooks/useDictionary.ts b/app/hooks/useDictionary.ts
+index 6a73e6750..15b74aa9e 100644
+--- a/app/hooks/useDictionary.ts
++++ b/app/hooks/useDictionary.ts
+@@ -81,6 +81,8 @@ export default function useDictionary() {
+       warningNotice: t("Warning notice"),
+       success: t("Success"),
+       successNotice: t("Success notice"),
++      bible: t("Bible"),
++      bibleNotice: t("Bible quote"),
+       insertDate: t("Current date"),
+       insertTime: t("Current time"),
+       insertDateTime: t("Current date and time"),
+diff --git a/app/scenes/Document/components/Document.tsx b/app/scenes/Document/components/Document.tsx
+index a231a90ee..67684d36d 100644
+--- a/app/scenes/Document/components/Document.tsx
++++ b/app/scenes/Document/components/Document.tsx
+@@ -532,11 +532,6 @@ class DocumentScene extends React.Component<Props> {
+                 </Flex>
+               </React.Suspense>
+             </MaxWidth>
+-            {isShare &&
+-              !parseDomain(window.location.origin).custom &&
+-              !auth.user && (
+-                <Branding href="//www.getoutline.com?ref=sharelink" />
+-              )}
+           </Container>
+           {!isShare && (
+             <Footer>
+diff --git a/app/typings/styled-components.d.ts b/app/typings/styled-components.d.ts
+index be368444f..ecfcae00c 100644
+--- a/app/typings/styled-components.d.ts
++++ b/app/typings/styled-components.d.ts
+@@ -54,6 +54,8 @@ declare module "styled-components" {
+     noticeWarningText: string;
+     noticeSuccessBackground: string;
+     noticeSuccessText: string;
++    noticeBibleBackground: string;
++    noticeBibleText: string;
+   }
+ 
+   interface Colors {
+diff --git a/shared/editor/components/Styles.ts b/shared/editor/components/Styles.ts
+index bdebcc6c0..ca670a66f 100644
+--- a/shared/editor/components/Styles.ts
++++ b/shared/editor/components/Styles.ts
+@@ -886,6 +886,20 @@ h6 {
+   }
+ }
+ 
++.notice-block.bible {
++  background: ${transparentize(0.9, props.theme.noticeBibleBackground)};
++  border-left: 4px solid ${props.theme.noticeBibleBackground};
++  color: ${props.theme.noticeBibleText};
++
++  .icon {
++    color: ${props.theme.noticeBibleBackground};
++  }
++
++  a {
++    color: ${props.theme.noticeBibleText};
++  }
++}
++
+ blockquote {
+   margin: 0;
+   padding: 8px 10px 8px 1.5em;
+diff --git a/shared/editor/nodes/Notice.tsx b/shared/editor/nodes/Notice.tsx
+index bd976e69b..9ee40b8d5 100644
+--- a/shared/editor/nodes/Notice.tsx
++++ b/shared/editor/nodes/Notice.tsx
+@@ -1,5 +1,5 @@
+ import Token from "markdown-it/lib/token";
+-import { WarningIcon, InfoIcon, StarredIcon, DoneIcon } from "outline-icons";
++import { WarningIcon, InfoIcon, StarredIcon, BookmarkedIcon, DoneIcon } from "outline-icons";
+ import { wrappingInputRule } from "prosemirror-inputrules";
+ import { NodeSpec, Node as ProsemirrorNode, NodeType } from "prosemirror-model";
+ import * as React from "react";
+@@ -44,6 +44,8 @@ export default class Notice extends Node {
+               ? "warning"
+               : dom.className.includes("success")
+               ? "success"
++              : dom.className.includes("bible")
++              ? "bible"
+               : undefined,
+           }),
+         },
+@@ -93,6 +95,8 @@ export default class Notice extends Node {
+             component = <WarningIcon />;
+           } else if (node.attrs.style === "success") {
+             component = <DoneIcon />;
++          } else if (node.attrs.style === "bible") {
++            component = <BookmarkedIcon />;
+           } else {
+             component = <InfoIcon />;
+           }
+diff --git a/shared/styles/theme.ts b/shared/styles/theme.ts
+index 5f10aa263..137f125c9 100644
+--- a/shared/styles/theme.ts
++++ b/shared/styles/theme.ts
+@@ -31,6 +31,7 @@ const defaultColors: Colors = {
+   warning: "#f08a24",
+   success: "#2f3336",
+   info: "#a0d3e8",
++  bible: "#996633",
+   brand: {
+     red: "#FF5C80",
+     pink: "#FF4DFA",
+@@ -96,6 +97,8 @@ const buildBaseTheme = (input: Partial<Colors>) => {
+     noticeSuccessBackground: colors.brand.green,
+     noticeSuccessText: colors.almostBlack,
+     tableSelectedBackground: transparentize(0.8, colors.accent),
++    noticeBibleBackground: "#996633",
++    noticeBibleText: colors.almostBlack,
+     breakpoints,
+     ...colors,
+     ...spacing,
+@@ -234,6 +237,7 @@ export const buildDarkTheme = (input: Partial<Colors>): DefaultTheme => {
+     noticeTipText: colors.white,
+     noticeWarningText: colors.white,
+     noticeSuccessText: colors.white,
++    noticeBibleText: colors.white,
+     progressBarBackground: colors.slate,
+     scrollbarBackground: colors.black,
+     scrollbarThumb: colors.lightBlack,

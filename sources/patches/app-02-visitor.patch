@@ -1,0 +1,141 @@
+diff --git a/package.json b/package.json
+index e0d3f56ea..fcd1ce270 100644
+--- a/package.json
++++ b/package.json
+@@ -160,6 +160,7 @@
+     "pg-tsquery": "^8.4.1",
+     "pluralize": "^8.0.0",
+     "png-chunks-extract": "^1.0.0",
++    "passport-req": "^0.1.1",
+     "polished": "^4.2.2",
+     "prosemirror-codemark": "^0.4.2",
+     "prosemirror-commands": "^1.5.2",
+diff --git a/plugins/req/plugin.json b/plugins/req/plugin.json
+new file mode 100644
+index 000000000..ae7c40333
+--- /dev/null
++++ b/plugins/req/plugin.json
+@@ -0,0 +1,4 @@
++{
++  "name": "visiteur",
++  "description": "Adds an req compatible authentication provider."
++}
+diff --git a/plugins/req/server/.babelrc b/plugins/req/server/.babelrc
+new file mode 100644
+index 000000000..c87001bc4
+--- /dev/null
++++ b/plugins/req/server/.babelrc
+@@ -0,0 +1,3 @@
++{ 
++  "extends": "../../../server/.babelrc"
++}
+diff --git a/plugins/req/server/auth/req.ts b/plugins/req/server/auth/req.ts
+new file mode 100644
+index 000000000..bc03fc6d3
+--- /dev/null
++++ b/plugins/req/server/auth/req.ts
+@@ -0,0 +1,70 @@
++import passport from "@outlinewiki/koa-passport";
++import type { Context } from "koa";
++import Router from "koa-router";
++import { capitalize } from "lodash";
++import { Strategy as ReqStrategy } from "passport-req";
++import { slugifyDomain } from "@shared/utils/domains";
++import accountProvisioner from "@server/commands/accountProvisioner";
++import env from "@server/env";
++import passportMiddleware from "@server/middlewares/passport";
++import { User } from "@server/models";
++import { AuthenticationResult } from "@server/types";
++import {
++  StateStore,
++  getTeamFromContext,
++  getClientFromContext,
++} from "@server/utils/passport";
++
++const router = new Router();
++const providerName = "req";
++
++export const config = {
++  name: "visiteur",
++  enabled: true,
++};
++
++if (true) {
++  passport.use(
++    new ReqStrategy(
++      async function (req,done) {
++        try {
++          const domain = "domain.tld";
++          const subdomain = domain.split(".")[0];
++          const teamName = capitalize(subdomain);
++          const name = "visiteur";
++          const email = "visiteur@anthropologiebiblique.fr";
++          const result = await accountProvisioner({
++            ip: req.ip,
++            team: {
++              name: teamName,
++              domain,
++              subdomain,
++            },
++            user: {
++              name: name,
++              email: email,
++              avatarUrl: null,
++            },
++            authenticationProvider: {
++              name: providerName,
++              providerId: domain,
++            },
++            authentication: {
++              providerId: "1234",
++              accessToken: null,
++              refreshToken: null,
++              scopes: [],
++            },
++          });
++          return done(null, result.user, result);
++        } catch (err) {
++          return done(err, null);
++        }
++      }
++    )
++  );
++
++  router.get("req", passportMiddleware(providerName));
++}
++
++export default router;
+diff --git a/yarn.lock b/yarn.lock
+index c47df111a..3d7a8e387 100644
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -10290,6 +10290,14 @@ passport-oauth@1.0.x:
+     passport-oauth1 "1.x.x"
+     passport-oauth2 "1.x.x"
+ 
++passport-req@^0.1.1:
++  version "0.1.1"
++  resolved "https://registry.yarnpkg.com/passport-req/-/passport-req-0.1.1.tgz#451bff1500b3d464a768d42f0762328a21236a18"
++  integrity sha512-9qmM0vD5v7jYLWxezNNCleOw+8IkVAuvOwQ6NJaUuJkdFJTR1KatXH1i5MxWgffx+libLWYLRUPtc6GHOmn+6w==
++  dependencies:
++    passport "~0.1.1"
++    pkginfo "0.2.x"
++
+ passport-slack-oauth2@^1.2.0:
+   version "1.2.0"
+   resolved "https://registry.yarnpkg.com/passport-slack-oauth2/-/passport-slack-oauth2-1.2.0.tgz#d214a698b55a137393636a26827747f6c436dab4"
+@@ -10320,6 +10328,14 @@ passport@^0.7.0:
+     pause "0.0.1"
+     utils-merge "^1.0.1"
+ 
++passport@~0.1.1:
++  version "0.1.18"
++  resolved "https://registry.yarnpkg.com/passport/-/passport-0.1.18.tgz#c8264479dcb6414cadbb66752d12b37e0b6525a1"
++  integrity sha512-qteYojKG/qth7UBbbGU7aqhe5ndJs6YaUkH2B6+7FWQ0OeyYmWknzOATpMhdoSTDcLLliq9n4Fcy1mGs80iUMw==
++  dependencies:
++    pause "0.0.1"
++    pkginfo "0.2.x"
++
+ passthrough-counter@^1.0.0:
+   version "1.0.0"
+   resolved "https://registry.yarnpkg.com/passthrough-counter/-/passthrough-counter-1.0.0.tgz#1967d9e66da572b5c023c787db112a387ab166fa"
