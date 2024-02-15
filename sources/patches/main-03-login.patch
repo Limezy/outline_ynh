@@ -1,0 +1,59 @@
+ddiff --git a/app/scenes/Login/components/AuthenticationProvider.tsx b/app/scenes/Login/components/AuthenticationProvider.tsx
+index 5d564453d..9e3c5b55b 100644
+--- a/app/scenes/Login/components/AuthenticationProvider.tsx
++++ b/app/scenes/Login/components/AuthenticationProvider.tsx
+@@ -70,7 +70,7 @@ function AuthenticationProvider(props: Props) {
+               <InputLarge
+                 type="email"
+                 name="email"
+-                placeholder="me@domain.com"
++                placeholder="email@domaine.fr"
+                 value={email}
+                 onChange={handleChangeEmail}
+                 disabled={isSubmitting}
+@@ -79,12 +79,12 @@ function AuthenticationProvider(props: Props) {
+                 short
+               />
+               <ButtonLarge type="submit" disabled={isSubmitting}>
+-                {t("Sign In")} →
++                {t("S'identifier")} →
+               </ButtonLarge>
+             </>
+           ) : (
+             <ButtonLarge type="submit" icon={<EmailIcon />} fullwidth>
+-              {t("Continue with Email")}
++              {t("Accès membre (email)")}
+             </ButtonLarge>
+           )}
+         </Form>
+@@ -99,7 +99,7 @@ function AuthenticationProvider(props: Props) {
+         icon={<PluginIcon id={id} />}
+         fullwidth
+       >
+-        {t("Continue with {{ authProviderName }}", {
++        {t("Accès {{ authProviderName }}", {
+           authProviderName: name,
+         })}
+       </ButtonLarge>
+diff --git a/app/scenes/Login/index.tsx b/app/scenes/Login/index.tsx
+index 9a9650b48..5357d5cf5 100644
+--- a/app/scenes/Login/index.tsx
++++ b/app/scenes/Login/index.tsx
+@@ -264,7 +264,7 @@ function Login({ children }: Props) {
+         ) : (
+           <>
+             <StyledHeading as="h2" centered>
+-              {t("Login to {{ authProviderName }}", {
++              {t("Bienvenue sur Anthropologie Biblique", {
+                 authProviderName: config.name || env.APP_NAME,
+               })}
+             </StyledHeading>
+@@ -282,7 +282,7 @@ function Login({ children }: Props) {
+             {hasMultipleProviders && (
+               <>
+                 <Note>
+-                  {t("You signed in with {{ authProviderName }} last time.", {
++                  {t("Vous vous êtes authentifié avec l'accès {{ authProviderName }} la dernière fois.", {
+                     authProviderName: defaultProvider.name,
+                   })}
+                 </Note>
