@@ -79,7 +79,7 @@ if yunohost app list | grep -q "$YNH_APP_ARG_DEX_DOMAIN$YNH_APP_ARG_DEX_PATH"; t
 	ynh_die "The domain provided for Dex is already used by another app. Please chose another one !"
 fi
 
-yunohost app install https://github.com/YunoHost-Apps/dex_ynh --force --args "domain=$dex_domain&path=$dex_path&OIDC_name=$oidc_name&OIDC_secret=$oidc_secret&OIDC_callback=$oidc_callback" 2>&1 | tee dexlog.txt
+yunohost app install https://github.com/YunoHost-Apps/dex_ynh/tree/eae540ac2e1b3dab06fa81c5c4b61f9a6653474c --force --args "domain=$dex_domain&path=$dex_path&OIDC_name=$oidc_name&OIDC_secret=$oidc_secret&OIDC_callback=$oidc_callback" 2>&1 | tee dexlog.txt
 dex_app=$(gawk 'match($0, /Installation of (.+) completed/, app) {print app[1]}' dexlog.txt)
 rm dexlog.txt
 
