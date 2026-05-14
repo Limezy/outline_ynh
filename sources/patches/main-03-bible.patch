@@ -1,0 +1,150 @@
+diff --git a/app/editor/menus/block.tsx b/app/editor/menus/block.tsx
+index 98aa7405e..3cfc446f9 100644
+--- a/app/editor/menus/block.tsx
++++ b/app/editor/menus/block.tsx
+@@ -22,6 +22,7 @@ import {
+   MathIcon,
+   DoneIcon,
+   EmbedIcon,
++  BookmarkedIcon,
+   CollapseIcon,
+ } from "outline-icons";
+ import * as React from "react";
+@@ -234,6 +235,13 @@ export default function blockMenuItems(
+       keywords: "notice card suggestion",
+       attrs: { style: "tip" },
+     },
++    {
++      name: "container_notice",
++      title: dictionary.bibleNotice,
++      icon: <BookmarkedIcon />,
++      keywords: "notice card bible",
++      attrs: { style: "bible" },
++    },
+     {
+       name: "separator",
+     },
+diff --git a/app/hooks/useDictionary.ts b/app/hooks/useDictionary.ts
+index 649e74e96..33757df19 100644
+--- a/app/hooks/useDictionary.ts
++++ b/app/hooks/useDictionary.ts
+@@ -109,6 +109,8 @@ export default function useDictionary() {
+       warningNotice: t("Warning notice"),
+       success: t("Success"),
+       successNotice: t("Success notice"),
++      bible: t("Bible"),
++      bibleNotice: t("Bible quote"),
+       insertDate: t("Current date"),
+       insertTime: t("Current time"),
+       insertDateTime: t("Current date and time"),
+diff --git a/app/scenes/Shared/Document.tsx b/app/scenes/Shared/Document.tsx
+index c09ea8b3a..4ea0718e1 100644
+--- a/app/scenes/Shared/Document.tsx
++++ b/app/scenes/Shared/Document.tsx
+@@ -59,9 +59,6 @@ function SharedDocument({ document }: Props) {
+         tocPosition={tocPosition}
+         readOnly
+       />
+-      {showBranding ? (
+-        <Branding href="//www.getoutline.com?ref=sharelink" />
+-      ) : null}
+     </>
+   );
+ }
+diff --git a/app/typings/styled-components.d.ts b/app/typings/styled-components.d.ts
+index d844c4055..791efd6f4 100644
+--- a/app/typings/styled-components.d.ts
++++ b/app/typings/styled-components.d.ts
+@@ -61,6 +61,8 @@ declare module "styled-components" {
+     noticeWarningText: string;
+     noticeSuccessBackground: string;
+     noticeSuccessText: string;
++    noticeBibleBackground: string;
++    noticeBibleText: string;
+   }
+ 
+   interface Colors {
+diff --git a/shared/editor/components/Styles.ts b/shared/editor/components/Styles.ts
+index dd5d8c55a..c51990c51 100644
+--- a/shared/editor/components/Styles.ts
++++ b/shared/editor/components/Styles.ts
+@@ -1374,6 +1374,20 @@ ${
+   }
+ }
+ 
++.notice-block.bible {
++  background: ${transparentize(0.9, props.theme.noticeBibleBackground)};
++  border-left: 4px solid ${props.theme.noticeBibleBackground};
++  color: ${props.theme.noticeBibleText};
++
++  .icon {
++    color: ${props.theme.noticeBibleBackground};
++  }
++
++  a {
++    color: ${props.theme.noticeBibleText};
++  }
++}
++
+ blockquote {
+   margin: 0;
+   padding: 8px 10px 8px 1.5em;
+diff --git a/shared/editor/nodes/Notice.tsx b/shared/editor/nodes/Notice.tsx
+index 34e69105c..554042761 100644
+--- a/shared/editor/nodes/Notice.tsx
++++ b/shared/editor/nodes/Notice.tsx
+@@ -20,6 +20,7 @@ export enum NoticeTypes {
+   Success = "success",
+   Tip = "tip",
+   Warning = "warning",
++  Bible = "bible"
+ }
+ 
+ export default class Notice extends Node {
+@@ -56,6 +57,8 @@ export default class Notice extends Node {
+                 ? NoticeTypes.Warning
+                 : dom.className.includes(NoticeTypes.Success)
+                   ? NoticeTypes.Success
++                  : dom.className.includes(NoticeTypes.Bible)
++                  ? NoticeTypes.Bible
+                   : undefined,
+           }),
+         },
+@@ -105,6 +108,8 @@ export default class Notice extends Node {
+             component = <WarningIcon />;
+           } else if (node.attrs.style === NoticeTypes.Success) {
+             component = <DoneIcon />;
++          } else if (node.attrs.style === NoticeTypes.Bible) {
++            component = <BookmarkedIcon />;
+           } else {
+             component = <InfoIcon />;
+           }
+diff --git a/shared/styles/theme.ts b/shared/styles/theme.ts
+index 8e600ec2e..2bbce473b 100644
+--- a/shared/styles/theme.ts
++++ b/shared/styles/theme.ts
+@@ -31,6 +31,7 @@ const defaultColors: Colors = {
+   warning: "#f08a24",
+   success: "#3ad984",
+   info: "#a0d3e8",
++  bible: "#996633",
+   brand: {
+     red: "#FF5C80",
+     pink: "#FF4DFA",
+@@ -103,6 +104,8 @@ const buildBaseTheme = (input: Partial<Colors>) => {
+     noticeWarningText: colors.almostBlack,
+     noticeSuccessBackground: colors.brand.green,
+     noticeSuccessText: colors.almostBlack,
++    noticeBibleBackground: "#996633",
++    noticeBibleText: colors.almostBlack,
+     tableSelectedBackground: transparentize(0.9, colors.accent),
+     breakpoints,
+     ...colors,
+@@ -258,6 +261,7 @@ export const buildDarkTheme = (input: Partial<Colors>): DefaultTheme => {
+     noticeTipText: colors.white,
+     noticeWarningText: colors.white,
+     noticeSuccessText: colors.white,
++    noticeBibleText: colors.white,
+     progressBarBackground: colors.slate,
+     scrollbarBackground: colors.black,
+     scrollbarThumb: colors.lightBlack,
