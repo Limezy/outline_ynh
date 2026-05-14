@@ -24,6 +24,39 @@ index 98aa7405e..3cfc446f9 100644
      {
        name: "separator",
      },
+diff --git a/app/editor/menus/notice.tsx b/app/editor/menus/notice.tsx
+index 26d3384fc..76dcac747 100644
+--- a/app/editor/menus/notice.tsx
++++ b/app/editor/menus/notice.tsx
+@@ -4,6 +4,7 @@ import {
+   InfoIcon,
+   StarredIcon,
+   WarningIcon,
++  BookmarkedIcon,
+ } from "outline-icons";
+ import type { EditorState } from "prosemirror-state";
+ import { NoticeTypes } from "@shared/editor/nodes/Notice";
+@@ -23,6 +24,7 @@ export default function noticeMenuItems(
+     [NoticeTypes.Warning]: dictionary.warningNotice,
+     [NoticeTypes.Success]: dictionary.successNotice,
+     [NoticeTypes.Tip]: dictionary.tipNotice,
++    [NoticeTypes.Bible]: dictionary.bibleNotice,
+   };
+ 
+   return [
+@@ -55,6 +57,12 @@ export default function noticeMenuItems(
+           icon: <StarredIcon />,
+           label: dictionary.tipNotice,
+           active: () => currentStyle === NoticeTypes.Tip,
++        },
++                {
++          name: NoticeTypes.Bible,
++          icon: <BookmarkedIcon />,
++          label: dictionary.bibleNotice,
++          active: () => currentStyle === NoticeTypes.Bible,
+         },
+       ],
+     },
 diff --git a/app/hooks/useDictionary.ts b/app/hooks/useDictionary.ts
 index 649e74e96..33757df19 100644
 --- a/app/hooks/useDictionary.ts
