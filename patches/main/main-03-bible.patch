@@ -90,14 +90,14 @@ index dd5d8c55a..c51990c51 100644
    margin: 0;
    padding: 8px 10px 8px 1.5em;
 diff --git a/shared/editor/nodes/Notice.tsx b/shared/editor/nodes/Notice.tsx
-index 34e69105c..554042761 100644
+index 34e69105c..58b7c3484 100644
 --- a/shared/editor/nodes/Notice.tsx
 +++ b/shared/editor/nodes/Notice.tsx
 @@ -20,6 +20,7 @@ export enum NoticeTypes {
    Success = "success",
    Tip = "tip",
    Warning = "warning",
-+  Bible = "bible"
++  Bible = "bible",
  }
  
  export default class Notice extends Node {
